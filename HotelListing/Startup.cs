@@ -1,3 +1,4 @@
+using HotelListing.Configurations;
 using HotelListing.Controllers.Data;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -41,6 +42,8 @@ namespace HotelListing
                 options.AddPolicy("CorsPolicy", builder =>
                     builder.AllowAnyMethod().AllowAnyMethod().AllowAnyHeader());
             });
+
+            services.AddAutoMapper(typeof(MapperInitializer));
 
             services.AddSwaggerGen(c =>
             {
