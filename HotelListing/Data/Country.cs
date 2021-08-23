@@ -13,7 +13,7 @@ namespace HotelListing.Controllers.Data
 
         public string ShortName { get; set; }
 
-        // in our unitof work we can look for our country and include the list 
+        // in our unit of work we can look for our country and include the list 
         // of hotels
         public virtual IList<Hotel> Hotels { get; set; }
     }
