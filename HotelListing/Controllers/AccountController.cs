@@ -58,6 +58,7 @@ namespace HotelListing.Controllers
                     return BadRequest(ModelState);
                 }
 
+                await _userManager.AddToRolesAsync(user, userDTO.Roles);
                 return Accepted();
             }
             catch (Exception ex)
@@ -67,32 +68,32 @@ namespace HotelListing.Controllers
             }
         }
 
-        [HttpPost]
-        [Route("login")]
-        public async Task<IActionResult> Login([FromBody] LoginUserDTO userDTO)
-        {
-            _logger.LogInformation($"Login Attempt for {userDTO.Email}");
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-            try
-            {
-                var result = await _signManager.PasswordSignInAsync(userDTO.Email, userDTO.Password,
-                    false, false);
+        //[HttpPost]
+        //[Route("login")]
+        //public async Task<IActionResult> Login([FromBody] LoginUserDTO userDTO)
+        //{
+        //    _logger.LogInformation($"Login Attempt for {userDTO.Email}");
+        //    if (!ModelState.IsValid)
+        //    {
+        //        return BadRequest(ModelState);
+        //    }
+        //    try
+        //    {
+        //        var result = await _signManager.PasswordSignInAsync(userDTO.Email, userDTO.Password,
+        //            false, false);
 
-                if(!result.Succeeded)
-                {
-                    return Unauthorized(userDTO);
-                }
+        //        if(!result.Succeeded)
+        //        {
+        //            return Unauthorized(userDTO);
+        //        }
 
-                return Accepted();
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, $"Something Went Wrong in the {nameof(Login)}");
-                return Problem($"Something Went Wrong in the {nameof(Login)}", statusCode: 500);
-            }
-        }
+        //        return Accepted();
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        _logger.LogError(ex, $"Something Went Wrong in the {nameof(Login)}");
+        //        return Problem($"Something Went Wrong in the {nameof(Login)}", statusCode: 500);
+        //    }
+        //}
     }
 }

@@ -13,11 +13,9 @@ namespace HotelListing
     {
         public static void ConfigureIdentity(this IServiceCollection services)
         {
-            var builder = services.AddIdentityCore<ApiUser>(q => q.User.RequireUniqueEmail = true)
-                .AddEntityFrameworkStores<DatabaseContext>().AddDefaultTokenProviders();
-
-            //builder = new IdentityBuilder(builder.UserType, typeof(IdentityRole), services);
-            //builder.AddEntityFrameworkStores<DatabaseContext>().AddDefaultTokenProviders();
+            var builder = services.AddIdentityCore<ApiUser>(q => q.User.RequireUniqueEmail = true);
+            builder = new IdentityBuilder(builder.UserType, typeof(IdentityRole), services);
+            builder.AddEntityFrameworkStores<DatabaseContext>().AddDefaultTokenProviders();
         }
     }
 }

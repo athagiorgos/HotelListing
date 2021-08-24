@@ -1,4 +1,5 @@
-﻿using HotelListing.Data;
+﻿using HotelListing.Configurations.Entities;
+using HotelListing.Data;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
@@ -9,8 +10,7 @@ namespace HotelListing.Controllers.Data
     public class DatabaseContext : IdentityDbContext<ApiUser>
     {
         public DatabaseContext(DbContextOptions options) : base(options)
-        {
-        }
+        {}
 
         // This property of type DbSet<> is used to define the table to be created based
         // on the object that we pass inside the <>.
@@ -18,60 +18,14 @@ namespace HotelListing.Controllers.Data
 
         public DbSet<Hotel> Hotels { get; set; }
 
-
-
         // Seeding Data on Startup of the application with Entity Framework Core
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
 
-            modelBuilder.Entity<Country>().HasData(
-                new Country
-                {
-                    Id = 1,
-                    Name = "Greece",
-                    ShortName = "GR"
-                },
-                new Country
-                {
-                    Id = 2,
-                    Name = "United States of America",
-                    ShortName = "US"
-                },
-                new Country
-                {
-                    Id = 3,
-                    Name = "France",
-                    ShortName = "FR"
-                }
-            );
-
-            modelBuilder.Entity<Hotel>().HasData(
-                new Hotel
-                {
-                    Id = 1,
-                    Name = "Cavo Taggoo",
-                    Address = "Mykonos",
-                    CountryId = 1,
-                    Rating = 5
-                },
-                new Hotel
-                {
-                    Id = 2,
-                    Name = "Los Angeles Luxury Hotel",
-                    Address = "Los Angeles",
-                    CountryId = 2,
-                    Rating = 5
-                },
-                new Hotel
-                {
-                    Id = 3,
-                    Name = "Hotel Lutetia",
-                    Address = "45 Bd Raspail",
-                    CountryId = 3,
-                    Rating = 4.5
-                }
-            );
+            modelBuilder.ApplyConfiguration(new CountryConfiguration());
+            modelBuilder.ApplyConfiguration(new HotelConfiguration());
+            modelBuilder.ApplyConfiguration(new RoleConfiguration());
         }
     }
 }
