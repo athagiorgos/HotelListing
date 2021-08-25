@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 namespace HotelListing.Models
 {
 
-    public class LoginUserDTO
+    public class LoginUserDto
     {
         [Required]
         [DataType(DataType.EmailAddress)]
@@ -17,7 +17,7 @@ namespace HotelListing.Models
         [StringLength(15, ErrorMessage = "Your Password is limited to {2} to {1} characters", MinimumLength = 6)]
         public string Password { get; set; }
     }
-    public class UserDTO : LoginUserDTO
+    public class UserDto : LoginUserDto
     {
         public string FirstName { get; set; }
 

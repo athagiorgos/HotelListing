@@ -39,7 +39,7 @@ namespace HotelListing.Controllers
         //FromBody attribute says look in the body of the url not IN the url
         // Basically we are looking for fields that match ONLY THIS DTO!!
         // Everything else is going to be ignored
-        public async Task<IActionResult> Register([FromBody] UserDTO userDto)
+        public async Task<IActionResult> Register([FromBody] UserDto userDto)
         {
             _logger.LogInformation($"Registration Attempt for {userDto.Email}");
             if(!ModelState.IsValid)
@@ -74,7 +74,7 @@ namespace HotelListing.Controllers
 
         [HttpPost]
         [Route("login")]
-        public async Task<IActionResult> Login([FromBody] LoginUserDTO userDto)
+        public async Task<IActionResult> Login([FromBody] LoginUserDto userDto)
         {
             _logger.LogInformation($"Login Attempt for {userDto.Email}");
             if (!ModelState.IsValid)

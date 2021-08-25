@@ -75,7 +75,7 @@ namespace HotelListing.Services
             return new SigningCredentials(secret, SecurityAlgorithms.HmacSha256);
         }
 
-        public async Task<bool> Validate(LoginUserDTO userDTO)
+        public async Task<bool> Validate(LoginUserDto userDTO)
         {
             _user = await _userManager.FindByNameAsync(userDTO.Email);
             var validPassword = await _userManager.CheckPasswordAsync(_user, userDTO.Password);

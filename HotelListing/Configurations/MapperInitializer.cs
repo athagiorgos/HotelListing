@@ -14,11 +14,13 @@ namespace HotelListing.Configurations
 
         public MapperInitializer()
         {
-            CreateMap<Country, CountryDTO>().ReverseMap();
-            CreateMap<Country, CreateCountryDTO>().ReverseMap();
-            CreateMap<Hotel, HotelDTO>().ReverseMap();
-            CreateMap<Hotel, CreateHotelDTO>().ReverseMap();
-            CreateMap<ApiUser, UserDTO>().ReverseMap();
+            CreateMap<Country, CountryDto>().ReverseMap();
+            CreateMap<Country, CreateCountryDto>().ReverseMap();
+            CreateMap<Country, UpdateCountryDto>();
+            CreateMap<Hotel, HotelDto>().ReverseMap();
+            CreateMap<Hotel, CreateHotelDto>().ReverseMap();
+            CreateMap<Hotel, UpdateHotelDto>();
+            CreateMap<ApiUser, UserDto>().ReverseMap();
         }
     }
 }

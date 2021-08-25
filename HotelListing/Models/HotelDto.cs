@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace HotelListing.Models
 {
-    public class CreateHotelDTO
+    public class CreateHotelDto
     {
         [Required]
         [StringLength(maximumLength: 150, ErrorMessage = "Hotel Name Is Too Long")]
@@ -20,18 +20,23 @@ namespace HotelListing.Models
         [Range(1,5)]
         public double Rating { get; set; }
 
-        [Required]
+        //[Required]
         public int CountryId { get; set; }
 
     }
 
-    public class HotelDTO : CreateHotelDTO
+    public class UpdateHotelDto : CreateHotelDto
+    {
+        
+    }
+
+    public class HotelDto : CreateHotelDto
     {
         public int Id { get; set; }
 
         // A DTO should not reference a domain object directly
         // Dtos talk to Dtos, and domain obj to domain obj
         // Automapper is the only thing connecting them
-        public CountryDTO Country { get; set; }
+        public CountryDto Country { get; set; }
     }
 }
