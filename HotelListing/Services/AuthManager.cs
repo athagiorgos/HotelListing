@@ -77,8 +77,9 @@ namespace HotelListing.Services
 
         public async Task<bool> Validate(LoginUserDTO userDTO)
         {
-            var user = await _userManager.FindByNameAsync(userDTO.Email);
-            return (user != null && await _userManager.CheckPasswordAsync(user, userDTO.Password));
+            _user = await _userManager.FindByNameAsync(userDTO.Email);
+            var validPassword = await _userManager.CheckPasswordAsync(_user, userDTO.Password);
+            return (_user != null && validPassword);
         }
     }
 }
