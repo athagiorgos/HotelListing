@@ -38,7 +38,7 @@ namespace HotelListing
 
             services.AddAuthentication();
             services.ConfigureIdentity();
-            services.ConfigureJWT(Configuration);
+            services.ConfigureJwt(Configuration);
 
             services.AddControllers();
 

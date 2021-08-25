@@ -70,7 +70,7 @@ namespace HotelListing.Services
         private SigningCredentials GetSigningCredentials()
         {
             var key = Environment.GetEnvironmentVariable("KEY");
-            var secret = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(key));
+            var secret = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(key!));
 
             return new SigningCredentials(secret, SecurityAlgorithms.HmacSha256);
         }

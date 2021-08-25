@@ -39,18 +39,18 @@ namespace HotelListing.Controllers
         //FromBody attribute says look in the body of the url not IN the url
         // Basically we are looking for fields that match ONLY THIS DTO!!
         // Everything else is going to be ignored
-        public async Task<IActionResult> Register([FromBody] UserDTO userDTO)
+        public async Task<IActionResult> Register([FromBody] UserDTO userDto)
         {
-            _logger.LogInformation($"Registration Attempt for {userDTO.Email}");
+            _logger.LogInformation($"Registration Attempt for {userDto.Email}");
             if(!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
             try
             {
-                var user = _mapper.Map<ApiUser>(userDTO);
-                user.UserName = userDTO.Email;
-                var result = await _userManager.CreateAsync(user, userDTO.Password);
+                var user = _mapper.Map<ApiUser>(userDto);
+                user.UserName = userDto.Email;
+                var result = await _userManager.CreateAsync(user, userDto.Password);
 
                 if(!result.Succeeded)
                 {
@@ -62,7 +62,7 @@ namespace HotelListing.Controllers
                     return BadRequest(ModelState);
                 }
 
-                await _userManager.AddToRolesAsync(user, userDTO.Roles);
+                await _userManager.AddToRolesAsync(user, userDto.Roles);
                 return Accepted();
             }
             catch (Exception ex)
@@ -74,9 +74,9 @@ namespace HotelListing.Controllers
 
         [HttpPost]
         [Route("login")]
-        public async Task<IActionResult> Login([FromBody] LoginUserDTO userDTO)
+        public async Task<IActionResult> Login([FromBody] LoginUserDTO userDto)
         {
-            _logger.LogInformation($"Login Attempt for {userDTO.Email}");
+            _logger.LogInformation($"Login Attempt for {userDto.Email}");
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
@@ -84,7 +84,7 @@ namespace HotelListing.Controllers
 
             try
             {
-                if(!await _authManager.Validate(userDTO))
+                if(!await _authManager.Validate(userDto))
                 {
                     return Unauthorized();
                 }
@@ -97,5 +97,6 @@ namespace HotelListing.Controllers
                 return Problem($"Something Went Wrong in the {nameof(Login)}", statusCode: 500);
             }
         }
+
     }
 }
