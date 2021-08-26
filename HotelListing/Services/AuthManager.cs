@@ -54,7 +54,7 @@ namespace HotelListing.Services
         {
             var claims = new List<Claim>
              {
-                 new Claim(ClaimTypes.Name, _user.UserName)
+                 new (ClaimTypes.Name, _user.UserName)
              };
 
             var roles = await _userManager.GetRolesAsync(_user);
@@ -75,10 +75,10 @@ namespace HotelListing.Services
             return new SigningCredentials(secret, SecurityAlgorithms.HmacSha256);
         }
 
-        public async Task<bool> Validate(LoginUserDto userDTO)
+        public async Task<bool> Validate(LoginUserDto userDto)
         {
-            _user = await _userManager.FindByNameAsync(userDTO.Email);
-            var validPassword = await _userManager.CheckPasswordAsync(_user, userDTO.Password);
+            _user = await _userManager.FindByNameAsync(userDto.Email);
+            var validPassword = await _userManager.CheckPasswordAsync(_user, userDto.Password);
             return (_user != null && validPassword);
         }
     }
