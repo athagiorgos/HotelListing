@@ -17,6 +17,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AspNetCoreRateLimit;
 
 namespace HotelListing
 {
@@ -35,6 +36,13 @@ namespace HotelListing
             // Register the databse connection string to our services
             services.AddDbContext<DatabaseContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("sqlConnection")));
+
+            services.AddMemoryCache();
+            
+            // Rate limiting
+            services.ConfigureRateLimiting();
+            services.AddHttpContextAccessor();
+            services.AddSingleton<IProcessingStrategy, AsyncKeyLockProcessingStrategy>();
             
             // Caching
             services.ConfigureHttpCacheHeaders();
@@ -93,8 +101,11 @@ namespace HotelListing
             // Using CORS policy service
             app.UseCors("CorsPolicy");
 
+            //Caching
             app.UseResponseCaching();
             app.UseHttpCacheHeaders();
+            // Rate limit
+            app.UseIpRateLimiting();
             
             app.UseRouting();
 

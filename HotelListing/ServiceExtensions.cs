@@ -6,7 +6,9 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using System;
+using System.Collections.Generic;
 using System.Text;
+using AspNetCoreRateLimit;
 using HotelListing.Models;
 using Marvin.Cache.Headers;
 using Microsoft.AspNetCore.Builder;
@@ -37,7 +39,8 @@ namespace HotelListing
                 // Adding authentication to the application and the default scheme is jwt
                 options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
                 options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-            }).AddJwtBearer(options => {
+            }).AddJwtBearer(options =>
+            {
                 options.TokenValidationParameters = new TokenValidationParameters
                 {
                     ValidateIssuer = true,
@@ -54,7 +57,7 @@ namespace HotelListing
         {
             app.UseExceptionHandler(error =>
             {
-                
+
                 // context here represents the controller that is passing down information
                 error.Run(async context =>
                 {
@@ -95,10 +98,24 @@ namespace HotelListing
                     expirationOptions.MaxAge = 120;
                     expirationOptions.CacheLocation = CacheLocation.Private;
                 },
-                validationOptions =>
+                validationOptions => { validationOptions.MustRevalidate = true; });
+        }
+
+        public static void ConfigureRateLimiting(this IServiceCollection services)
+        {
+            var rateLimitRules = new List<RateLimitRule>
+            {
+                new()
                 {
-                    validationOptions.MustRevalidate = true;
-                });
+                    Endpoint = "*",
+                    Limit = 1,
+                    Period = "5s"
+                }
+            };
+            services.Configure<IpRateLimitOptions>(opt => { opt.GeneralRules = rateLimitRules; });
+            services.AddSingleton<IRateLimitCounterStore, MemoryCacheRateLimitCounterStore>();
+            services.AddSingleton<IIpPolicyStore, MemoryCacheIpPolicyStore>();
+            services.AddSingleton<IRateLimitConfiguration, RateLimitConfiguration>();
         }
     }
 }
