@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 
 using HotelListing.Data;
+using Microsoft.EntityFrameworkCore;
 
 namespace HotelListing.Controllers
 {
@@ -47,7 +48,8 @@ namespace HotelListing.Controllers
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> GetCountry(int id)
         {
-            var country = await _unitOfWork.CountryRepository.Get(q => q.Id == id, new List<string> {"Hotels"});
+            var country = await _unitOfWork.CountryRepository.Get(q => q.Id == id, 
+                q => q.Include( x => x.Hotels));
             // Mapping the Country objects to a list of CountryDto objects
             var result = _mapper.Map<CountryDto>(country);
             return Ok(result);

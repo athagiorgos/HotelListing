@@ -7,6 +7,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 using HotelListing.Models;
+using Microsoft.EntityFrameworkCore.Query;
 using X.PagedList;
 
 namespace HotelListing.Repository
@@ -36,31 +37,25 @@ namespace HotelListing.Repository
             _db.RemoveRange(entities);
         }
 
-        public async Task<IPagedList<T>> GetPagedList(RequestParams requestParams, List<string> includes = null)
+        public async Task<IPagedList<T>> GetPagedList(RequestParams requestParams, Func<IQueryable<T>, IIncludableQueryable<T, object>> includes = null)
         {
             IQueryable<T> query = _db;
 
             if (includes != null)
             {
-                foreach (var includedProperty in includes)
-                {
-                    query = query.Include(includedProperty);
-                }
+                query = includes(query);
             }
 
             return await query.AsNoTracking().ToPagedListAsync(requestParams.PageNumber, requestParams.PageSize);
         }
 
-        public async Task<T> Get(Expression<Func<T, bool>> expression, List<string> includes = null)
+        public async Task<T> Get(Expression<Func<T, bool>> expression, Func<IQueryable<T>, IIncludableQueryable<T, object>> includes = null)
         {
             IQueryable<T> query = _db;
 
             if(includes != null)
             {
-                foreach(var includedProperty in includes)
-                {
-                    query = query.Include(includedProperty);
-                }
+                query = includes(query);
             }
 
             return await query.AsNoTracking().FirstOrDefaultAsync(expression);
@@ -68,7 +63,7 @@ namespace HotelListing.Repository
         }
 
         public async Task<IList<T>> GetAll(Expression<Func<T, bool>> expression = null, Func<IQueryable<T>,
-            IOrderedQueryable<T>> orderBy = null, List<string> includes = null)
+            IOrderedQueryable<T>> orderBy = null, Func<IQueryable<T>, IIncludableQueryable<T, object>> includes = null)
         {
             IQueryable<T> query = _db;
 
@@ -79,10 +74,7 @@ namespace HotelListing.Repository
 
             if (includes != null)
             {
-                foreach (var includedProperty in includes)
-                {
-                    query = query.Include(includedProperty);
-                }
+                query = includes(query);
             }
 
             if(orderBy != null)

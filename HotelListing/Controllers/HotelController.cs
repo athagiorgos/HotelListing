@@ -7,6 +7,7 @@ using Microsoft.Extensions.Logging;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using HotelListing.Data;
+using Microsoft.EntityFrameworkCore;
 
 namespace HotelListing.Controllers
 {
@@ -44,7 +45,9 @@ namespace HotelListing.Controllers
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> GetHotel(int id)
         {
-            var hotel = await _unitOfWork.HotelRepository.Get(q => q.Id == id);
+            // Strongly typing the Include operation
+            var hotel = await _unitOfWork.HotelRepository.Get(q => q.Id == id, 
+                include: q => q.Include(x => x.Country));
             var result = _mapper.Map<HotelDto>(hotel);
             return Ok(result);
         }
