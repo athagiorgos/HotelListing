@@ -35,6 +35,10 @@ namespace HotelListing
             // Register the databse connection string to our services
             services.AddDbContext<DatabaseContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("sqlConnection")));
+            
+            // Caching
+            services.ConfigureHttpCacheHeaders();
+            services.AddResponseCaching();
 
             services.AddAuthentication();
             services.ConfigureIdentity();
@@ -57,11 +61,19 @@ namespace HotelListing
 
             services.AddSwaggerGen(c =>
             {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "HotelListing", Version = "v1" });
+                c.SwaggerDoc("v1", new OpenApiInfo {Title = "HotelListing", Version = "v1"});
             });
 
-            services.AddControllers().AddNewtonsoftJson(op =>
+            services.AddControllers(config =>
+            {
+                config.CacheProfiles.Add("120SecondsDuration", new CacheProfile
+                {
+                    Duration = 120
+                });
+            }).AddNewtonsoftJson(op =>
                 op.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
+
+            services.ConfigureVersioning();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -70,9 +82,9 @@ namespace HotelListing
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
-                
             }
 
+            app.ConfigureExceptionHandler();
             app.UseSwagger();
             app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "HotelListing v1"));
 
@@ -81,6 +93,9 @@ namespace HotelListing
             // Using CORS policy service
             app.UseCors("CorsPolicy");
 
+            app.UseResponseCaching();
+            app.UseHttpCacheHeaders();
+            
             app.UseRouting();
 
             app.UseAuthentication();
